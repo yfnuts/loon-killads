@@ -45,4 +45,4 @@ IP-CIDR,120.27.235.201/32,REJECT-DICT,no-resolve
 ^https:\/\/(?:api-\w+|gateway-mobile-gray|post)\.soulapp\.cn\/(?:mobile\/app\/version\/queryIos|teenager\/config) response-body-json-del data
 
 [MITM]
-hostname = %APPEND%  api-*.soulapp.cn, api.soulapp.cn, chat-live.soulapp.cn, gateway-mobile-gray.soulapp.cn, post.soulapp.cn, ssp.soulapp.cn
+hostname = %APPEND%  api*.soulapp.cn, gateway-mobile-gray.soulapp.cn, post.soulapp.cn, ssp.soulapp.cn
