@@ -1,0 +1,2 @@
+# loon-script
+no ads
