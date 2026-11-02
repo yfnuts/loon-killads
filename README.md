@@ -1,2 +1,2 @@
-# loon-script
+# loon-script&lnplugin
 no ads
