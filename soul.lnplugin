@@ -1,29 +1,47 @@
-#!name=Soul 开屏广告过滤
-#!desc=过滤 Soul 开屏广告、SSP 竞价及广告配置接口，减少开屏等待与跳转
+#!name=Soul 开屏广告与内容精简
+#!desc=过滤 Soul 开屏广告、SSP 竞价、广告 CDN；精简热榜/直播推荐/首页引导等冗余内容
 #!author=custom
 #!homepage=https://github.com
 
 [Rule]
-# SSP 广告竞价（开屏广告的核心来源）
-DOMAIN,ssp.soulapp.cn,REJECT
+# ---- 业务 IP 白名单：防止被下方 IP 广告规则或 IP 广告库误杀 ----
+IP-CIDR,8.210.3.170/32,DIRECT,no-resolve
+IP-CIDR,47.75.72.47/32,DIRECT,no-resolve
 
-# 广告子域名（投放/上报/商业化 CDN）
+# ---- 广告域名：直接拒绝 ----
+DOMAIN,ssp.soulapp.cn,REJECT
+DOMAIN,ad-h5-cdn.soulapp.cn,REJECT
+DOMAIN,ad-h5-station-cdn.soulapp.cn,REJECT
+DOMAIN,ad-r.soulapp.cn,REJECT
+DOMAIN,soul-ad.soulapp.cn,REJECT
 DOMAIN-SUFFIX,ad.soulapp.cn,REJECT
-DOMAIN-SUFFIX,ad-r.soulapp.cn,REJECT
-DOMAIN-SUFFIX,soul-ad.soulapp.cn,REJECT
-DOMAIN-SUFFIX,ad-h5-cdn.soulapp.cn,REJECT
-DOMAIN-SUFFIX,ad-h5-station-cdn.soulapp.cn,REJECT
 DOMAIN-SUFFIX,soul-commercial.soulapp.cn,REJECT
 DOMAIN-SUFFIX,soul-report.soulapp.cn,REJECT
 DOMAIN-SUFFIX,marketing-openapi.soulapp.cn,REJECT
 
-[URL Rewrite]
-# 直接拒绝广告配置接口，阻断开屏广告下发
-^https?:\/\/ssp\.soulapp\.cn\/api\/ad\/config - reject
-^https?:\/\/ssp\.soulapp\.cn\/api\/q - reject
+# ---- 广告落地 IP（时效性差，域名规则足够后可删除本段）----
+IP-CIDR,47.56.131.76/32,REJECT,no-resolve
+IP-CIDR,47.97.215.55/32,REJECT,no-resolve
+IP-CIDR,47.99.42.29/32,REJECT,no-resolve
+IP-CIDR,47.110.187.87/32,REJECT,no-resolve
+IP-CIDR,47.243.147.125/32,REJECT,no-resolve
+IP-CIDR,120.27.235.201/32,REJECT,no-resolve
 
-# 拦截全局弹窗配置中的 AD_* 开屏弹窗（返回空对象）
-^https?:\/\/api-a\.soulapp\.cn\/soul\/global\/popup\/(allConfig|config) - reject-dict
+[URL Rewrite]
+# 开屏广告配置接口：返回空字典
+^https:\/\/ssp\.soulapp\.cn\/api\/q reject-dict
+^https?:\/\/ssp\.soulapp\.cn\/api\/ad\/config reject-dict
+
+# 全局弹窗配置：返回空字典，屏蔽 AD_* 开屏弹窗
+^https?:\/\/api-a\.soulapp\.cn\/soul\/global\/popup\/(allConfig|config) reject-dict
+
+# 直播「星球」推荐列表：返回 200 空响应
+^https:\/\/chat-live\.soulapp\.cn\/live\/planet\/recListV2 reject-200
+
+# 内容型接口：删除响应 JSON 顶层 data 字段
+# 注意：teenager/config 被删会导致青少年模式失效，家长用户请删除该分支
+^https:\/\/(?:api-\w+|gateway-mobile-gray|post)\.soulapp\.cn\/(?:furion\/position\/content|hot\/soul\/rank|official\/scene\/module|v2\/post\/gift\/list|v\d\/post\/homepage\/guide\/card) response-body-json-del data
+^https:\/\/(?:api-\w+|gateway-mobile-gray|post)\.soulapp\.cn\/(?:mobile\/app\/version\/queryIos|teenager\/config) response-body-json-del data
 
 [MITM]
-hostname = %APPEND% *.soulapp.cn, ssp.soulapp.cn, api-a.soulapp.cn
+hostname = %APPEND% *.soulapp.cn, api-*.soulapp.cn, api.soulapp.cn, chat-live.soulapp.cn, gateway-mobile-gray.soulapp.cn, post.soulapp.cn, ssp.soulapp.cn
