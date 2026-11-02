@@ -1,0 +1,29 @@
+#!name=Soul 开屏广告过滤
+#!desc=过滤 Soul 开屏广告、SSP 竞价及广告配置接口，减少开屏等待与跳转
+#!author=custom
+#!homepage=https://github.com
+
+[Rule]
+# SSP 广告竞价（开屏广告的核心来源）
+DOMAIN,ssp.soulapp.cn,REJECT
+
+# 广告子域名（投放/上报/商业化 CDN）
+DOMAIN-SUFFIX,ad.soulapp.cn,REJECT
+DOMAIN-SUFFIX,ad-r.soulapp.cn,REJECT
+DOMAIN-SUFFIX,soul-ad.soulapp.cn,REJECT
+DOMAIN-SUFFIX,ad-h5-cdn.soulapp.cn,REJECT
+DOMAIN-SUFFIX,ad-h5-station-cdn.soulapp.cn,REJECT
+DOMAIN-SUFFIX,soul-commercial.soulapp.cn,REJECT
+DOMAIN-SUFFIX,soul-report.soulapp.cn,REJECT
+DOMAIN-SUFFIX,marketing-openapi.soulapp.cn,REJECT
+
+[URL Rewrite]
+# 直接拒绝广告配置接口，阻断开屏广告下发
+^https?:\/\/ssp\.soulapp\.cn\/api\/ad\/config - reject
+^https?:\/\/ssp\.soulapp\.cn\/api\/q - reject
+
+# 拦截全局弹窗配置中的 AD_* 开屏弹窗（返回空对象）
+^https?:\/\/api-a\.soulapp\.cn\/soul\/global\/popup\/(allConfig|config) - reject-dict
+
+[MITM]
+hostname = %APPEND% *.soulapp.cn, ssp.soulapp.cn, api-a.soulapp.cn
