@@ -5,6 +5,7 @@
 
 [Rule]
 # ---- 业务 IP 白名单：防止被下方 IP 广告规则或 IP 广告库误杀 ----
+PROTOCOL,QUIC,REJECT-DROP
 IP-CIDR,8.210.3.170/32,DIRECT,no-resolve
 IP-CIDR,47.75.72.47/32,DIRECT,no-resolve
 
