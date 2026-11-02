@@ -9,23 +9,23 @@ IP-CIDR,8.210.3.170/32,DIRECT,no-resolve
 IP-CIDR,47.75.72.47/32,DIRECT,no-resolve
 
 # ---- 广告域名：直接拒绝 ----
-DOMAIN,ssp.soulapp.cn,REJECT
-DOMAIN,ad-h5-cdn.soulapp.cn,REJECT
-DOMAIN,ad-h5-station-cdn.soulapp.cn,REJECT
-DOMAIN,ad-r.soulapp.cn,REJECT
-DOMAIN,soul-ad.soulapp.cn,REJECT
-DOMAIN-SUFFIX,ad.soulapp.cn,REJECT
-DOMAIN-SUFFIX,soul-commercial.soulapp.cn,REJECT
-DOMAIN-SUFFIX,soul-report.soulapp.cn,REJECT
-DOMAIN-SUFFIX,marketing-openapi.soulapp.cn,REJECT
+DOMAIN,ssp.soulapp.cn,REJECT-DICT
+DOMAIN,ad-h5-cdn.soulapp.cn,REJECT-DICT
+DOMAIN,ad-h5-station-cdn.soulapp.cn,REJECT-DICT
+DOMAIN,ad-r.soulapp.cn,REJECT-DICT
+DOMAIN,soul-ad.soulapp.cn,REJECT-DICTT
+DOMAIN-SUFFIX,ad.soulapp.cn,REJECT-DICT
+DOMAIN-SUFFIX,soul-commercial.soulapp.cn,REJECT-DICT
+DOMAIN-SUFFIX,soul-report.soulapp.cn,REJECT-DICT
+DOMAIN-SUFFIX,marketing-openapi.soulapp.cn,REJECT-DICT
 
 # ---- 广告落地 IP（时效性差，域名规则足够后可删除本段）----
-IP-CIDR,47.56.131.76/32,REJECT,no-resolve
-IP-CIDR,47.97.215.55/32,REJECT,no-resolve
-IP-CIDR,47.99.42.29/32,REJECT,no-resolve
-IP-CIDR,47.110.187.87/32,REJECT,no-resolve
-IP-CIDR,47.243.147.125/32,REJECT,no-resolve
-IP-CIDR,120.27.235.201/32,REJECT,no-resolve
+IP-CIDR,47.56.131.76/32,REJECT-DICT,no-resolve
+IP-CIDR,47.97.215.55/32,REJECT-DICT,no-resolve
+IP-CIDR,47.99.42.29/32,REJECT-DICT,no-resolve
+IP-CIDR,47.110.187.87/32,REJECT-DICT,no-resolve
+IP-CIDR,47.243.147.125/32,REJECT-DICT,no-resolve
+IP-CIDR,120.27.235.201/32,REJECT-DICT,no-resolve
 
 [URL Rewrite]
 # 开屏广告配置接口：返回空字典
