@@ -1,0 +1,34 @@
+#!name = Soul 去广告
+#!desc = 过滤 Soul App 广告：屏蔽广告域名/广告服务器 IP、拦截ssp广告请求、星球推荐列表，并移除首页/热榜等接口返回中的广告 data 字段。需开启 MITM 并安装信任 Loon 证书。
+#!category = 广告拦截
+#!icon = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Soul.png
+
+[Rule]
+# ---- 广告服务器直连白名单（放行，避免误伤） ----
+IP-CIDR,8.210.3.170/32,DIRECT,no-resolve
+IP-CIDR,47.75.72.47/32,DIRECT,no-resolve
+
+# ---- 广告域名屏蔽 ----
+DOMAIN,ad-h5-cdn.soulapp.cn,REJECT
+DOMAIN,ad-h5-station-cdn.soulapp.cn,REJECT
+DOMAIN,ad-r.soulapp.cn,REJECT
+DOMAIN,soul-ad.soulapp.cn,REJECT
+
+# ---- 广告 IP 屏蔽 ----
+IP-CIDR,47.56.131.76/32,REJECT,no-resolve
+IP-CIDR,47.97.215.55/32,REJECT,no-resolve
+IP-CIDR,47.99.42.29/32,REJECT,no-resolve
+IP-CIDR,47.110.187.87/32,REJECT,no-resolve
+IP-CIDR,47.243.147.125/32,REJECT,no-resolve
+IP-CIDR,120.27.235.201/32,REJECT,no-resolve
+
+[URL Rewrite]
+# ssp 广告请求：返回空对象
+^https:\/\/ssp\.soulapp\.cn\/api\/q reject-dict
+# 星球直播推荐列表：返回 200 空响应
+^https:\/\/chat-live\.soulapp\.cn\/live\/planet\/recListV2 reject-200
+# 广场/热榜/官方场景/青少年配置/礼物列表/主页引导卡片等接口：删除响应中的 data 字段
+^https:\/\/(?:api-\w+|gateway-mobile-gray|post)\.soulapp\.cn\/(?:furion\/position\/content|hot\/soul\/rank|mobile\/app\/version\/queryIos|official\/scene\/module|teenager\/config|v2\/post\/gift\/list|v\d\/post\/homepage\/guide\/card) response-body-json-del data
+
+[MITM]
+hostname = %APPEND% api*.soulapp.cn, gateway-mobile-gray.soulapp.cn, post.soulapp.cn, ssp.soulapp.cn
